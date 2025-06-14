@@ -1,7 +1,7 @@
 <?php
 session_start();
-include_once './conexao/config.php';
-include_once './conexao/funcoes.php';
+include_once '../conexao/config.php';
+include_once '../conexao/funcoes.php';
 
 
 // Verificar se o usuário está logado
@@ -16,7 +16,7 @@ $usuario = new Usuario($db);
 if (isset($_GET['deletar'])) {
     $id = $_GET['deletar'];
     $usuario->deletar($id);
-    header('Location: verifica_login.php');
+    header('Location: ./conexao/verifica_login.php');
     exit();
 }
 // Obter dados do usuário logado
