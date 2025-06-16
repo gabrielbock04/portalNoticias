@@ -59,3 +59,40 @@ class Usuario {
     }
 }
 ?>
+<?php
+class Noticia {
+    private $conn;
+
+    public function __construct($db) {
+        $this->conn = $db;
+    }
+
+    public function listarTodas() {
+        $sql = "SELECT * FROM noticias ORDER BY data DESC";
+        return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function buscarPorId($id) {
+        $stmt = $this->conn->prepare("SELECT * FROM noticias WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function criar($titulo, $noticia, $imagem, $data, $autor) {
+        $stmt = $this->conn->prepare("INSERT INTO noticias (titulo, noticia, imagem, data, autor) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$titulo, $noticia, $imagem, $data, $autor]);
+    }
+
+    public function atualizar($id, $titulo, $noticia, $imagem) {
+        $stmt = $this->conn->prepare("UPDATE noticias SET titulo = ?, noticia = ?, imagem = ? WHERE id = ?");
+        $stmt->execute([$titulo, $noticia, $imagem, $id]);
+    }
+
+    public function excluir($id) {
+        $stmt = $this->conn->prepare("DELETE FROM noticias WHERE id = ?");
+        $stmt->execute([$id]);
+    }
+}
+
+?>
+

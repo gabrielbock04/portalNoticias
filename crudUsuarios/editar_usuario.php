@@ -4,8 +4,8 @@ if (!isset($_SESSION['usuario_id'])) {
     header('Location: login.php');
     exit();
 }
-include_once './conexao/config.php';
-include_once './conexao/funcoes.php';
+include_once '../conexao/config.php';
+include_once '../conexao/funcoes.php';
 
 
 $usuario = new Usuario($db);
@@ -16,9 +16,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fone = $_POST['fone'];
     $email = $_POST['email'];
     $usuario->atualizar($id, $nome, $sexo, $fone, $email);
-    header('Location: verifica_login.php');
+    header('Location: ../conexao/verifica_login.php');
     exit();
 }
+
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
     $row = $usuario->lerPorId($id);

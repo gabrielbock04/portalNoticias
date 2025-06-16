@@ -1,4 +1,5 @@
 <?php
+
 include_once './conexao/config.php';
 include_once './conexao/funcoes.php';
 
@@ -16,10 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // if ($senha !== $confirmarSenha) {
     //     $erroSenha = 'As senhas não coincidem.';
     // } else {
-        $usuario->criar($nome, $sexo, $fone, $email, $senha);
-        header('Location: login.php');
-        exit();
-    }
+    $usuario->criar($nome, $sexo, $fone, $email, $senha);
+    header('Location: login.php');
+    exit();
+}
 
 ?>
 
