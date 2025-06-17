@@ -3,7 +3,6 @@
 include_once './conexao/config.php';
 include_once './conexao/funcoes.php';
 
-$erroSenha = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario = new Usuario($db);
@@ -12,14 +11,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fone = $_POST['fone'];
     $email = $_POST['email'];
     $senha = $_POST['senha'];
-    // $confirmarSenha = $_POST['confirmar_senha'];
+    $confirmarSenha = $_POST['confirmar_senha'];
 
-    // if ($senha !== $confirmarSenha) {
-    //     $erroSenha = 'As senhas não coincidem.';
-    // } else {
-    $usuario->criar($nome, $sexo, $fone, $email, $senha);
-    header('Location: login.php');
-    exit();
+    if ($senha !== $confirmarSenha) {
+        echo "<script>alert('As senhas não coincidem.'); window.history.back();</script>";
+    } else {
+        $usuario->criar($nome, $sexo, $fone, $email, $senha, $confirmarSenha);
+        header('Location: login.php');
+        exit();
+    }
 }
 
 ?>
@@ -36,7 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h1>Adicionar Usuário</h1>
     <form method="POST">
         <label for="nome">Nome:</label>
-        <input type="text" name="nome" required>
+        <input type="text" name="nome" required pattern="[A-Za-zÀ-ÿ\s]+" title="Digite apenas letras."
+            oninput="this.value = this.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '')">
         <br><br>
         <label>Sexo:</label>
         <label for="masculino">
@@ -47,7 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </label>
         <br><br>
         <label for="fone">Fone:</label>
-        <input type="text" name="fone" required>
+        <input type="text" name="fone" required pattern="\d+" title="Digite apenas números."
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')">
         <br><br>
         <label for="email">Email:</label>
         <input type="email" name="email" required>
@@ -55,9 +57,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label for="senha">Senha:</label>
         <input type="password" name="senha" required>
         <br><br>
-        <!-- <label for="confirmar_senha">Confirmar Senha:</label>
+        <label for="confirmar_senha">Confirmar Senha:</label>
         <input type="password" name="confirmar_senha" required>
-        <br><br> -->
+        <br><br>
         <input type="submit" value="Adicionar">
     </form>
 </body>

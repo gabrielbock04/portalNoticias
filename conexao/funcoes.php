@@ -26,8 +26,8 @@ class Usuario {
         return false;
     }
 
-    public function criar($nome, $sexo, $fone, $email, $senha) {
-        return $this->registrar($nome, $sexo, $fone, $email, $senha);
+    public function criar($nome, $sexo, $fone, $email, $senha, $confirmar_senha) {
+        return $this->registrar($nome, $sexo, $fone, $email, $senha, $confirmar_senha);
     }
 
     public function ler() {
