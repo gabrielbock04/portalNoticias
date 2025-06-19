@@ -22,6 +22,9 @@ if (isset($_GET['deletar'])) {
 // Obter dados do usuário logado
 $dados_usuario = $usuario->lerPorId($_SESSION['usuario_id']);
 $nome_usuario = $dados_usuario['nome'];
+$_SESSION['is_admin'] = $dados_usuario['is_admin'];
+// echo "Valor de is_admin: " . $_SESSION['is_admin'];
+
 // Obter dados dos usuários
 $dados = $usuario->ler();
 // Função para determinar a saudação
