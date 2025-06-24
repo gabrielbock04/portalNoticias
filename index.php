@@ -52,6 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comentar'])) {
         </nav>
         <div class="header-actions">
             <?php if (isset($_SESSION['usuario_id'])): ?>
+                <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): ?>
+                    <a href="./painel_admin.php"><button class="btn btnEntrar" type="button">Painel do Admin</button></a>
+                <?php endif; ?>
                 <form action="./logout.php" method="post" style="display:inline;">
                     <button class="btnEntrar" type="submit">Sair</button>
                 </form>
@@ -60,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comentar'])) {
                 <a href="./cadastro_usuario.php"><button class="btn btnRegistrar registrar" type="button">Registrar-se</button></a>
             <?php endif; ?>
         </div>
+
     </header>
 
     <main class="main-content">
