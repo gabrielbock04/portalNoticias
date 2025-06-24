@@ -1,10 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Modern+Antiqua&display=swap');
+
 body {
     background-color: #d3ba89;
     margin: 0;
+    font-family: "Modern Antiqua", serif;
+}
+
+.modern-antiqua-regular {
+    font-family: "Modern Antiqua", serif;
+    font-weight: 450;
+    font-style: normal;
 }
 
 header {
-    background-color: #a08143 !important;
+    background-color: #947330 !important;
     display: flex;
     align-items: center;
     padding: 10px 40px;
@@ -38,15 +47,16 @@ nav {
 nav a {
     color: #222;
     text-decoration: none;
-    font-size: 0.98rem;
+    font-size: 1.3rem;
     padding: 4px 10px;
     border-radius: 4px;
     transition: background 0.2s;
 }
 
-nav a.active,
-nav a:hover {
-    background: #f2f2f2;
+nav a:hover,
+nav a:focus {
+    background: #543414;
+    color: #fff;
 }
 
 .header-actions {
@@ -68,17 +78,34 @@ button,
     transition: background 0.2s;
 }
 
-button.secondary,
-.btn.secondary {
+button.btnEntrar,
+.btn.btnEntrar {
     background: #f2f2f2;
     color: #222;
     border: 1px solid #ccc;
 }
 
-button.secondary:hover,
-.btn.secondary:hover {
+button.btnEntrar:hover,
+.btn.btnEntrar:hover {
     background: #e0e0e0;
 }
+
+button.btnRegistrar,
+.btnRegistrar {
+    background: #543414;
+    color: #fff;
+    border: none;
+}
+
+button.btnRegistrar:hover,
+.btnRegistrar:hover,
+button.btnRegistrar:focus,
+.btnRegistrar:focus {
+    background: #543414;
+    color: #fff;
+}
+
+
 
 /* seção noticias */
 .main-content {

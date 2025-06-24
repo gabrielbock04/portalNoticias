@@ -92,7 +92,80 @@ class Noticia {
         $stmt = $this->conn->prepare("DELETE FROM noticias WHERE id = ?");
         $stmt->execute([$id]);
     }
+    public function buscarPorTitulo($termo) {
+    $stmt = $this->conn->prepare("SELECT * FROM noticias WHERE titulo LIKE ? ORDER BY data DESC");
+    $stmt->execute(["%" . $termo . "%"]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 }
 
 ?>
+<?php
+class Funcionario {
+    private $conn;
+    private $table = "funcionarios";
 
+    public function __construct($db) {
+        $this->conn = $db;
+    }
+
+    public function listarTodos() {
+        $sql = "SELECT * FROM {$this->table}";
+        return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function buscarPorId($id) {
+        $stmt = $this->conn->prepare("SELECT * FROM {$this->table} WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function buscarPorUsuarioId($usuario_id) {
+        $stmt = $this->conn->prepare("SELECT * FROM {$this->table} WHERE usuario_id = ?");
+        $stmt->execute([$usuario_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function excluir($id) {
+        $stmt = $this->conn->prepare("DELETE FROM {$this->table} WHERE id = ?");
+        $stmt->execute([$id]);
+    }
+
+    public function atualizar($id, $dados) {
+        $sql = "UPDATE {$this->table} SET 
+            nome = ?, sobrenome = ?, data_nascimento = ?, cpf_cnpj = ?, sexo = ?, telefone = ?, 
+            email = ?, endereco = ?, estado_civil = ?, raca_cor = ?, escolaridade = ?, 
+            nacionalidade = ?, rg = ?
+            WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            $dados['nome'], $dados['sobrenome'], $dados['data_nascimento'], $dados['cpf_cnpj'],
+            $dados['sexo'], $dados['telefone'], $dados['email'], $dados['endereco'],
+            $dados['estado_civil'], $dados['raca_cor'], $dados['escolaridade'], $dados['nacionalidade'],
+            $dados['rg'], $id
+        ]);
+    }
+}
+?>
+<?php
+
+class Comentario {
+    private $conn;
+
+    public function __construct($db) {
+        $this->conn = $db;
+    }
+
+    public function listarPorNoticia($noticia_id) {
+        $stmt = $this->conn->prepare("SELECT c.*, u.nome FROM comentarios c JOIN usuarios u ON c.usuario_id = u.id WHERE c.noticia_id = ? ORDER BY c.data DESC");
+        $stmt->execute([$noticia_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function adicionar($noticia_id, $usuario_id, $comentario) {
+        $stmt = $this->conn->prepare("INSERT INTO comentarios (noticia_id, usuario_id, comentario) VALUES (?, ?, ?)");
+        $stmt->execute([$noticia_id, $usuario_id, $comentario]);
+    }
+}
+?>
