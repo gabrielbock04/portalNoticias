@@ -94,7 +94,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comentar'])) {
                         <div class="card-img">&#128247;</div>
                     <?php endif; ?>
 
-                    <div class="card-title"><?php echo htmlspecialchars($n['titulo']); ?></div>
+                    <a href="noticia.php?id=<?php echo $n['id']; ?>" class="card-title" style="text-decoration:none; color:inherit;">
+                        <?php echo htmlspecialchars($n['titulo']); ?>
+                    </a>
+
                     <div style="font-size:1.9rem;color:#666;margin-bottom:8px;">
                         <?php echo date('d/m/Y H:i', strtotime($n['data'])); ?>
 
