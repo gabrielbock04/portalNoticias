@@ -14,6 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['usuario_id'] = $dados_usuario['id'];
             $_SESSION['is_admin'] = $dados_usuario['is_admin'];
             $_SESSION['cargo'] = $dados_usuario['cargo'] ?? null;
+            setcookie("nome_usuario", $dados_usuario['nome'], time() + (86400 * 30), "/");
+
 
             // Verifica se o usuario também é um funcionario
             $stmt = $db->prepare("SELECT * FROM funcionarios WHERE usuario_id = ?");

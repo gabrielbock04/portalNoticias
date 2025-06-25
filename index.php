@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 include_once './conexao/config.php';
 include_once './conexao/funcoes.php';
 
@@ -14,6 +15,12 @@ if (isset($_GET['busca']) && !empty(trim($_GET['busca']))) {
     $noticias = $noticia->listarTodas();
 }
 ?>
+<?php
+if (isset($_COOKIE['nome_usuario'])) {
+    echo "Bem-vindo de volta, " . htmlspecialchars($_COOKIE['nome_usuario']) . "!";
+}
+?>
+
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -86,7 +93,7 @@ if (isset($_GET['busca']) && !empty(trim($_GET['busca']))) {
             color: #fff;
             min-height: 520px;
             align-items: stretch;
-            width: 100vw;
+            width: 100%;
             font-family: 'Modern Antiqua', serif;
             position: relative;
             z-index: 1;
@@ -214,28 +221,23 @@ if (isset($_GET['busca']) && !empty(trim($_GET['busca']))) {
         <?php endif; ?>
         <?php if (isset($_SESSION['usuario_id'])): ?>
             <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): ?>
-                <a href="painel_admin.php"><button type="button">Painel do Admin</button></a>
+                <a href="painel_admin.php" style="background:#7a4a2e; color:#fff; border-radius:18px; padding:8px 24px; text-decoration:none; font-weight:bold;">Painel do Admin</a>
             <?php endif; ?>
         <?php else: ?>
-            <a href="./login.php"><button class="btn btnEntrar" type="button">Entrar</button></a>
-            <a href="./cadastro_usuario.php"><button class="btn btnRegistrar registrar" type="button">Registrar-se</button></a>
+            <a href="./login.php" class="btn btnEntrar" style="background:#7a4a2e; color:#fff; border-radius:18px; padding:10px 28px; font-size:1.1rem; margin-right:10px; text-decoration:none;">Entrar</a>
+            <a href="./cadastro_usuario.php" class="btn btnRegistrar registrar" style="background:#fff; color:#7a4a2e; border-radius:18px; padding:10px 28px; font-size:1.1rem; text-decoration:none;">Registrar-se</a>
         <?php endif; ?>
-
-
         <div>
             <?php if (isset($_SESSION['usuario_id'])): ?>
                 <form action="./logout.php" method="post" style="display:inline;">
                     <button class="btnEntrar" type="submit" style="background:#7a4a2e; color:#fff; border:none; border-radius:18px; padding:10px 28px; font-size:1.1rem;">Sair</button>
                 </form>
-            <?php else: ?>
-                <a href="./login.php"><button class="btnEntrar" type="button" style="background:#7a4a2e; color:#fff; border:none; border-radius:18px; padding:10px 28px; font-size:1.1rem; margin-right:10px;">Entrar</button></a>
-                <a href="./cadastro_usuario.php"><button class="btnRegistrar" type="button" style="background:#fff; color:#7a4a2e; border:none; border-radius:18px; padding:10px 28px; font-size:1.1rem;">Registrar-se</button></a>
             <?php endif; ?>
         </div>
     </header>
 
 
-    <section class="hero-section" style="display: flex; background:rgb(128, 75, 48); color: #fff; min-height: 300px; width: 100vw; font-family: 'Modern Antiqua', serif;">
+    <section id="home" class="hero-section" style="display: flex; background:rgb(128, 75, 48); color: #fff; min-height: 300px; width: 100%; font-family: 'Modern Antiqua', serif;">
         <div class="hero-images"
             style="display: flex; flex-direction: column; gap: 50px; padding: 65px 0 80px 80px;
         position: relative;
@@ -284,7 +286,7 @@ if (isset($_GET['busca']) && !empty(trim($_GET['busca']))) {
     </section>
     <!-- Fim Hero Section -->
     <!-- Nova Section inspirada nas imagens enviadas -->
-    <section style="background: #f9f6f0; padding: 64px 0 32px 0;">
+    <section id="noticias" style="background: #f9f6f0; padding: 64px 0 32px 0;">
         <div style="max-width: 1280px; margin: 0 auto; padding: 0 40px;">
             <h2 style="font-family: 'Modern Antiqua', serif; font-size: 3rem; color: #4b2a17; margin-bottom: 18px; font-weight: 400;">
                 História viva, curiosidade sem fim
@@ -481,7 +483,7 @@ if (isset($_GET['busca']) && !empty(trim($_GET['busca']))) {
     </section>
     <!-- Depoimentos de Professores - Carrossel automático com animação de slide e borda de comentário -->
     <!-- Carrossel de depoimentos funcional -->
-    <section style="background: #3d2217; padding: 64px 0;">
+    <section id="contato" style="background: #3d2217; padding: 64px 0;">
         <div style="max-width: 900px; margin: 0 auto; position: relative;">
             <div class="depoimentos-carrossel">
                 <div class="depoimento-slide ativo">
