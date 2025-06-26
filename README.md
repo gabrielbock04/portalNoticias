@@ -1,4 +1,4 @@
-## Portal de Noticias fatos históricos e curiosidades
+## Almanaque do Tempo
 
 ![Tela do Projeto](./img/print.png)
 
