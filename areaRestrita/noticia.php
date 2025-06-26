@@ -1,7 +1,7 @@
 <?php
 session_start();
-include_once './conexao/config.php';
-include_once './conexao/funcoes.php';
+include_once '../conexao/config.php';
+include_once '../conexao/funcoes.php';
 
 if (!isset($_GET['id'])) {
     echo "Notícia não encontrada.";
@@ -18,7 +18,6 @@ if (!$noticia) {
     echo "Notícia não encontrada.";
     exit();
 }
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comentar']) && isset($_SESSION['usuario_id'])) {
     $comentario = trim($_POST['comentario']);
@@ -37,11 +36,13 @@ $comentarios = $comentarioObj->listarPorNoticia($noticia['id']);
 <head>
     <meta charset="UTF-8">
     <title><?= htmlspecialchars($noticia['titulo']) ?></title>
-    <link rel="stylesheet" href="./styles/styles.css">
+    <link rel="stylesheet" href="../styles/styles.css">
 </head>
 <body>
     <header class="header">
-        <img src="./img/logo.png" alt="logo" class="logo">
+        <a href="../index.php">
+            <img src="../img/logo.png" alt="logo" class="logo">
+        </a>
         <nav class="header-nav">
             <a href="index.php" class="active">Notícias</a>
             <a href="#">Fatos Históricos</a>
@@ -55,13 +56,12 @@ $comentarios = $comentarioObj->listarPorNoticia($noticia['id']);
                     <button class="btnEntrar" type="submit">Sair</button>
                 </form>
             <?php else: ?>
-                <a href="./login.php"><button class="btn btnEntrar" type="button">Entrar</button></a>
-                <a href="./cadastro_usuario.php"><button class="btn btnRegistrar registrar" type="button">Registrar-se</button></a>
+                <a href="../login.php"><button class="btn btnEntrar" type="button">Entrar</button></a>
+                <a href="../crudUsuarios/cadastro_usuario.php"><button class="btn btnRegistrar registrar" type="button">Registrar-se</button></a>
             <?php endif; ?>
         </div>
     </header>
 
-    
     <main class="main-content" style="max-width: 800px; margin: auto;">
         <h1><?= htmlspecialchars($noticia['titulo']) ?></h1>
         <p><strong>Data:</strong> <?= date('d/m/Y H:i', strtotime($noticia['data'])) ?></p>
@@ -70,7 +70,9 @@ $comentarios = $comentarioObj->listarPorNoticia($noticia['id']);
             <img src="<?= htmlspecialchars($noticia['imagem']) ?>" alt="Imagem" style="max-width:100%; margin: 20px 0;">
         <?php endif; ?>
 
-        <p style="font-size: 1.2rem;"><?= nl2br(htmlspecialchars($noticia['noticia'])) ?></p>
+        <div class="conteudo-noticia" style="font-size: 1.2rem;">
+            <?= $noticia['noticia'] ?>
+        </div>
 
         <hr>
         <h3>Comentários:</h3>
@@ -97,4 +99,3 @@ $comentarios = $comentarioObj->listarPorNoticia($noticia['id']);
         <?php endif; ?>
     </main>
 </body>
-</html>

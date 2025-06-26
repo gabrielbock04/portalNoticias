@@ -1,0 +1,130 @@
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #804B30;
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    min-height: 100vh;
+}
+
+.painel-container {
+    background: #fff;
+    color: #4B2A17;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+    padding: 40px 32px 32px 32px;
+    max-width: 1100px;
+    width: 98%;
+    margin: 40px auto;
+}
+
+h1,
+h2 {
+    color: #4B2A17;
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+a,
+.painel-container a {
+    color: #7a4a2e;
+    text-decoration: none;
+    font-weight: 500;
+    margin: 0 4px;
+    transition: color 0.2s;
+}
+
+h1 {
+    color: #fff;
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+a:hover,
+.painel-container a:hover {
+    color: #4B2A17;
+    text-decoration: underline;
+}
+
+.painel-links {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.painel-links a {
+    color: #fff;
+    background: #7a4a2e;
+    padding: 8px 18px;
+    border-radius: 18px;
+    margin: 0 6px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    display: inline-block;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.painel-links a:hover {
+    background: #4B2A17;
+    color: #FFD9B3;
+    text-decoration: none;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 32px;
+    background: #faf7f5;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+th,
+td {
+    padding: 12px 10px;
+    text-align: left;
+}
+
+th {
+    background: #7a4a2e;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.05rem;
+}
+
+tr:nth-child(even) {
+    background: #f3e7e1;
+}
+
+tr:hover {
+    background: #f8e3d6;
+}
+
+td a {
+    color: #7a4a2e;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+td a:hover {
+    background: #e7c7b2;
+    color: #4B2A17;
+}
+
+@media (max-width: 900px) {
+    .painel-container {
+        padding: 18px 4px;
+        max-width: 99vw;
+    }
+
+    table,
+    th,
+    td {
+        font-size: 0.98rem;
+    }
+}

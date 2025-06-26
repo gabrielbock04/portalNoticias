@@ -27,10 +27,14 @@ if (isset($_GET['id'])) {
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <title>Editar Usuário</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
 </head>
+
 <body>
     <h1>Editar Usuário</h1>
     <form method="POST">
@@ -55,4 +59,5 @@ if (isset($_GET['id'])) {
         <input type="submit" value="Atualizar">
     </form>
 </body>
+
 </html>

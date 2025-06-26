@@ -7,7 +7,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
 
 include_once './conexao/config.php';
 include_once './conexao/funcoes.php';
- 
+
 $db = (new Database())->getConnection();
 $funcionario = new Funcionario($db);
 
@@ -51,10 +51,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <title>Editar Funcionário</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
 </head>
+
 <body>
     <h1>Editar Funcionário</h1>
 
@@ -67,7 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <select name="sexo">
                 <option value="M" <?= $dados['sexo'] == 'M' ? 'selected' : '' ?>>Masculino</option>
                 <option value="F" <?= $dados['sexo'] == 'F' ? 'selected' : '' ?>>Feminino</option>
-                <option value="Outro" <?= $dados['sexo'] == 'Outro' ? 'selected' : '' ?>>Outro</option>
             </select>
         </label><br>
         <label>Telefone: <input type="text" name="telefone" value="<?= htmlspecialchars($dados['telefone']) ?>"></label><br>
@@ -83,4 +86,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <a href="painel_admin.php">Cancelar</a>
     </form>
 </body>
+
 </html>

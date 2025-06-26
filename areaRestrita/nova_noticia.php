@@ -1,9 +1,16 @@
 <?php
 session_start();
-if (!isset($_SESSION['usuario_id']) || (!$_SESSION['is_admin'] && !$_SESSION['is_funcionario'])) {
-    header('Location: ../index.php');
+if (
+    !isset($_SESSION['usuario_id']) ||
+    (
+        (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) &&
+        (!isset($_SESSION['eh_funcionario']) || $_SESSION['eh_funcionario'] != true)
+    )
+) {
+    header('Location: ../login.php');
     exit();
 }
+
 
 include_once '../conexao/config.php';
 include_once '../conexao/funcoes.php';
@@ -31,9 +38,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <title>Nova Notícia</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../styles/stylesNovaNoticia.css">
     <script src="https://cdn.tiny.cloud/1/37ybikexkmn7wucbg1x3kgi89eul0az7uq9v07orofaq4hku/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
         tinymce.init({
@@ -44,26 +54,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             height: 400,
             automatic_uploads: true,
             images_upload_url: 'upload_imagem.php',
-            images_upload_handler: function (blobInfo, success, failure) {
+            images_upload_handler: function(blobInfo, success, failure) {
                 success("data:" + blobInfo.blob().type + ";base64," + blobInfo.base64());
             }
         });
+        // Garante que o conteúdo do TinyMCE seja enviado no submit
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('form').addEventListener('submit', function() {
+                tinymce.triggerSave();
+            });
+        });
     </script>
 </head>
+
 <body>
-    <h2>Publicar Nova Notícia</h2>
+    <div class="container-nova-noticia">
+        <h2>Publicar Nova Notícia</h2>
+        <form method="POST">
+            <label for="titulo">Título:</label>
+            <input type="text" name="titulo" id="titulo" required>
 
-    <form method="POST">
-        <label>Título:</label><br>
-        <input type="text" name="titulo" required><br><br>
+            <label for="noticia">Conteúdo:</label>
+            <textarea id="noticia" name="noticia" rows="10" required></textarea>
 
-        <label>Conteúdo:</label><br>
-        <textarea id="noticia" name="noticia" rows="10" required></textarea><br><br>
+            <label for="imagem">Imagem principal (URL):</label>
+            <input type="text" name="imagem" id="imagem">
 
-        <label>Imagem principal (URL):</label><br>
-        <input type="text" name="imagem"><br><br>
-
-        <input type="submit" value="Publicar">
-    </form>
+            <input type="submit" value="Publicar" onclick="tinymce.get('noticia').save();">
+        </form>
+        <a href="../index.php" class="btn-voltar">Voltar</a>
+    </div>
 </body>
+
 </html>

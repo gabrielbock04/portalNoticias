@@ -1,45 +1,36 @@
 <?php
-session_start();
-include_once './conexao/config.php';
-include_once './conexao/funcoes.php';
 
-$usuario = new Usuario($db);
+include_once '../conexao/config.php';
+include_once '../conexao/funcoes.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['login'])) {
-        $email = $_POST['email'];
-        $senha = $_POST['senha'];
+    $usuario = new Usuario($db);
+    $nome = $_POST['nome'];
+    $sexo = $_POST['sexo'];
+    $fone = $_POST['fone'];
+    $email = $_POST['email'];
+    $senha = $_POST['senha'];
+    $confirmarSenha = $_POST['confirmar_senha'];
 
-        if ($dados_usuario = $usuario->login($email, $senha)) {
-            $_SESSION['usuario_id'] = $dados_usuario['id'];
-            $_SESSION['is_admin'] = $dados_usuario['is_admin'];
-            $_SESSION['cargo'] = $dados_usuario['cargo'] ?? null;
-            setcookie("nome_usuario", $dados_usuario['nome'], time() + (86400 * 30), "/");
-
-            // Verifica se o usuario também é um funcionario
-            $stmt = $db->prepare("SELECT * FROM funcionarios WHERE usuario_id = ?");
-            $stmt->execute([$dados_usuario['id']]);
-            $func = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            $_SESSION['eh_funcionario'] = $func ? true : false;
-
-            header('Location: index.php');
-            exit();
-        } else {
-            $mensagem_erro = "Credenciais inválidas!";
-        }
+    if ($senha !== $confirmarSenha) {
+        echo "<script>alert('As senhas não coincidem.'); window.history.back();</script>";
+    } else {
+        $usuario->criar($nome, $sexo, $fone, $email, $senha, $confirmarSenha);
+        header('Location: ../login.php');
+        exit();
     }
 }
+
 ?>
+
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
-    <title>A U T E N T I C A Ç Ã O</title>
+    <title>Adicionar Usuário</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./styles/login.css">
+    <link rel="stylesheet" href="./styles/cadastro_usuario.css">
     <style>
         html {
             scroll-behavior: smooth;
@@ -55,13 +46,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             justify-content: center;
         }
 
-        .container {
+        .container-cadastro {
             background: #fff;
             color: #222;
             border-radius: 12px;
             box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
             padding: 40px 32px 32px 32px;
-            max-width: 400px;
+            max-width: 420px;
             width: 95%;
             margin: 40px auto;
             display: flex;
@@ -69,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             align-items: center;
         }
 
-        .box h1 {
+        .container-cadastro h1 {
             color: #4B2A17;
             margin-bottom: 24px;
             font-size: 2rem;
@@ -90,6 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: #4B2A17;
         }
 
+        input[type="text"],
         input[type="email"],
         input[type="password"] {
             width: 100%;
@@ -99,6 +91,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-size: 1rem;
             box-sizing: border-box;
             margin-bottom: 10px;
+        }
+
+        input[type="radio"] {
+            margin-right: 6px;
         }
 
         input[type="submit"],
@@ -122,12 +118,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             filter: brightness(0.92);
         }
 
-        .mensagem p {
-            color: #b00;
-            margin-top: 16px;
-            text-align: center;
-        }
-
         a {
             color: #7a4a2e;
             text-decoration: underline;
@@ -138,12 +128,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         @media (max-width: 600px) {
-            .container {
+            .container-cadastro {
                 padding: 18px 8px;
                 max-width: 98vw;
             }
 
-            .box h1 {
+            .container-cadastro h1 {
                 font-size: 1.3rem;
             }
         }
@@ -151,23 +141,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
-    <div class="container">
-        <div class="box">
-            <h1>Realize seu Login</h1>
-            <form method="POST">
-                <label for="email">Email:</label>
-                <input type="email" name="email" required>
-                <label for="senha">Senha:</label>
-                <input type="password" name="senha" required>
-                <input type="submit" name="login" value="Login">
-            </form>
-            <p>Não tem uma conta? <a href="./crudUsuarios/cadastro_usuario.php">Registre-se aqui</a></p>
-            <p>Esqueceu a senha? <a href="./recuperar_senha.php">Recuperar senha</a></p>
-            <a href="index.php" class="btn-voltar">Voltar</a>
-            <div class="mensagem">
-                <?php if (isset($mensagem_erro)) echo '<p>' . $mensagem_erro . '</p>'; ?>
-            </div>
-        </div>
+    <div class="container-cadastro">
+        <h1>Adicionar Usuário</h1>
+        <form method="POST">
+            <label for="nome">Nome:</label>
+            <input type="text" name="nome" required pattern="[A-Za-zÀ-ÿ\s]+" title="Digite apenas letras."
+                oninput="this.value = this.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '')">
+
+            <label>Sexo:</label>
+            <label for="masculino">
+                <input type="radio" id="masculino" name="sexo" value="M" required> Masculino
+            </label>
+            <label for="feminino">
+                <input type="radio" id="feminino" name="sexo" value="F" required> Feminino
+            </label>
+
+            <label for="fone">Fone:</label>
+            <input type="text" name="fone" required pattern="\d+" title="Digite apenas números."
+                oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+
+            <label for="email">Email:</label>
+            <input type="email" name="email" required>
+
+            <label for="senha">Senha:</label>
+            <input type="password" name="senha" required>
+
+            <label for="confirmar_senha">Confirmar Senha:</label>
+            <input type="password" name="confirmar_senha" required>
+
+            <input type="submit" value="Adicionar">
+        </form>
+        <a href="../index.php" class="btn-voltar">Voltar</a>
     </div>
 </body>
 

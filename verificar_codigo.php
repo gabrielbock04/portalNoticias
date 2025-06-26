@@ -3,43 +3,42 @@ session_start();
 include_once './conexao/config.php';
 include_once './conexao/funcoes.php';
 
+$db = (new Database())->getConnection();
 $usuario = new Usuario($db);
 
+$mensagem = "";
+
+//verifica se as senhas são iguais + redefinir senha
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['login'])) {
-        $email = $_POST['email'];
-        $senha = $_POST['senha'];
+    $codigo = $_POST['codigo'];
+    $senha = $_POST['senha'];
+    $confirmar = $_POST['confirmar'];
 
-        if ($dados_usuario = $usuario->login($email, $senha)) {
-            $_SESSION['usuario_id'] = $dados_usuario['id'];
-            $_SESSION['is_admin'] = $dados_usuario['is_admin'];
-            $_SESSION['cargo'] = $dados_usuario['cargo'] ?? null;
-            setcookie("nome_usuario", $dados_usuario['nome'], time() + (86400 * 30), "/");
+    if ($senha !== $confirmar) {
+        $mensagem = "As senhas não coincidem.";
+    } else {
+        $usuarioEncontrado = $usuario->verificarCodigo($codigo);
 
-            // Verifica se o usuario também é um funcionario
-            $stmt = $db->prepare("SELECT * FROM funcionarios WHERE usuario_id = ?");
-            $stmt->execute([$dados_usuario['id']]);
-            $func = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            $_SESSION['eh_funcionario'] = $func ? true : false;
-
-            header('Location: index.php');
-            exit();
+        if ($usuarioEncontrado) {
+            if ($usuario->redefinirSenha($codigo, $senha)) {
+                $mensagem = "Senha redefinida com sucesso! <a href='login.php'>Clique aqui para entrar</a>";
+            } else {
+                $mensagem = "Erro ao redefinir a senha.";
+            }
         } else {
-            $mensagem_erro = "Credenciais inválidas!";
+            $mensagem = "Código inválido.";
         }
     }
 }
 ?>
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
-    <title>A U T E N T I C A Ç Ã O</title>
+    <title>Redefinir Senha</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./styles/login.css">
+
     <style>
         html {
             scroll-behavior: smooth;
@@ -55,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             justify-content: center;
         }
 
-        .container {
+        .recuperar-container {
             background: #fff;
             color: #222;
             border-radius: 12px;
@@ -69,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             align-items: center;
         }
 
-        .box h1 {
+        .recuperar-container h1 {
             color: #4B2A17;
             margin-bottom: 24px;
             font-size: 2rem;
@@ -81,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 16px;
         }
 
         label {
@@ -90,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: #4B2A17;
         }
 
-        input[type="email"],
+        input[type="text"],
         input[type="password"] {
             width: 100%;
             padding: 10px;
@@ -99,10 +98,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-size: 1rem;
             box-sizing: border-box;
             margin-bottom: 10px;
+            background: #f9f6f3;
         }
 
-        input[type="submit"],
-        .btn-voltar {
+        input[type="submit"] {
             background-color: #7a4a2e;
             color: #fff;
             border: none;
@@ -117,14 +116,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             display: inline-block;
         }
 
-        input[type="submit"]:hover,
-        .btn-voltar:hover {
+        input[type="submit"]:hover {
             filter: brightness(0.92);
         }
 
-        .mensagem p {
-            color: #b00;
-            margin-top: 16px;
+        p {
+            padding: 10px;
+            background: #e9f7ef;
+            color: #155724;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            border: 1px solid #c3e6cb;
             text-align: center;
         }
 
@@ -137,37 +139,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: #4B2A17;
         }
 
-        @media (max-width: 600px) {
-            .container {
+        @media (max-width: 800px) {
+            .recuperar-container {
                 padding: 18px 8px;
                 max-width: 98vw;
             }
 
-            .box h1 {
+            .recuperar-container h1 {
                 font-size: 1.3rem;
             }
         }
     </style>
 </head>
-
 <body>
-    <div class="container">
-        <div class="box">
-            <h1>Realize seu Login</h1>
-            <form method="POST">
-                <label for="email">Email:</label>
-                <input type="email" name="email" required>
-                <label for="senha">Senha:</label>
-                <input type="password" name="senha" required>
-                <input type="submit" name="login" value="Login">
-            </form>
-            <p>Não tem uma conta? <a href="./crudUsuarios/cadastro_usuario.php">Registre-se aqui</a></p>
-            <p>Esqueceu a senha? <a href="./recuperar_senha.php">Recuperar senha</a></p>
-            <a href="index.php" class="btn-voltar">Voltar</a>
-            <div class="mensagem">
-                <?php if (isset($mensagem_erro)) echo '<p>' . $mensagem_erro . '</p>'; ?>
-            </div>
-        </div>
+    <div class="recuperar-container">
+        <h1>Redefinir Senha</h1>
+
+        <?php if (!empty($mensagem)) echo "<p>$mensagem</p>"; ?>
+
+        <form method="POST">
+            <label for="codigo">Código de Verificação:</label>
+            <input type="text" name="codigo" required>
+
+            <label for="senha">Nova Senha:</label>
+            <input type="password" name="senha" required>
+
+            <label for="confirmar">Confirmar Nova Senha:</label>
+            <input type="password" name="confirmar" required>
+
+            <input type="submit" value="Redefinir Senha">
+        </form>
     </div>
 </body>
 

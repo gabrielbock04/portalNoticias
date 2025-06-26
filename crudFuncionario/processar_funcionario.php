@@ -5,8 +5,8 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
     exit();
 }
 
-include_once './conexao/config.php';
-include_once './conexao/funcoes.php';
+include_once '../conexao/config.php';
+include_once '../conexao/funcoes.php';
 $db = (new Database())->getConnection();
 
 // 1. Cadastrar o usuário
@@ -37,5 +37,5 @@ $stmt2->execute([
     $_POST['rg']
 ]);
 
-header("Location: ./painel_admin.php");
+header("Location: ../admin/painel_admin.php");
 exit();

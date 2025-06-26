@@ -34,6 +34,8 @@ if (empty($chave_recuperar_senha)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atualizar Senha</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
 </head>
 
 <body>
@@ -80,4 +82,5 @@ if (empty($chave_recuperar_senha)) {
 
     Lembrou a senha? <a href="index.php">clique aqui</a> para logar
 </body>
+
 </html>
