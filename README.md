@@ -1,4 +1,4 @@
-Portal de Noticias fatos históricos e curiosidades
+## Portal de Noticias fatos históricos e curiosidades
 
 ![Tela do Projeto](./img/print.png)
 
